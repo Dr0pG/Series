@@ -13,12 +13,6 @@ const AppNavigator = createStackNavigator({
   },
   'Main': {
     screen: SeriesPage,
-    navigationOptions: ({ navigation }) => {
-      const userNickName = navigation.state.params.user.user.email;
-      return ({
-        
-      });
-    }
   }
 }, {
   defaultNavigationOptions: {

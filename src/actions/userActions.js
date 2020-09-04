@@ -1,10 +1,13 @@
-const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
+import firebase from 'firebase';
+import 'firebase/auth';
+
+export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 const userLoginSuccess = (user) => ({
     type: USER_LOGIN_SUCCESS,
     user
 });
 
-const USER_LOGOUT = 'USER_LOGOUT';
+export const USER_LOGOUT = 'USER_LOGOUT';
 const userLogout = () => ({
     type: USER_LOGOUT
 });
@@ -20,13 +23,13 @@ function fakeTryLogin({ email, password }){
 }
 */
 export const tryLogin = ({ email, password }) => (dispatch) => {
-    firebase
+    return firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => {
             const action = userLoginSuccess(user);
             dispatch(action);
-        })/*
+        })
         .catch(error => {
             if (error.code === "auth/user-not-found") {
                 Alert.alert(
@@ -55,5 +58,5 @@ export const tryLogin = ({ email, password }) => (dispatch) => {
             }
             loginUserFailed(error)
         })
-        .then(() => this.setState({ isLoading: false }));*/
+        .then(() => this.setState({ isLoading: false }));
 }
