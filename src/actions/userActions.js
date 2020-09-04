@@ -1,6 +1,6 @@
-const USER_LOGIN = 'USER_LOGIN';
-const userLogin = (user) => ({
-    type: USER_LOGIN,
+const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
+const userLoginSuccess = (user) => ({
+    type: USER_LOGIN_SUCCESS,
     user
 });
 
@@ -9,11 +9,24 @@ const userLogout = () => ({
     type: USER_LOGOUT
 });
 
-export const tryLogin = ({ email, password }) => {
+/*
+const outraFuncao = fakeTryLogin(user);
+outraFuncao(store.dispatch) //redux-thunk
+
+function fakeTryLogin({ email, password }){
+    return function(dispatch) {
+        ...
+    }
+}
+*/
+export const tryLogin = ({ email, password }) => (dispatch) => {
     firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(loginUserSucess)
+        .then(user => {
+            const action = userLoginSuccess(user);
+            dispatch(action);
+        })/*
         .catch(error => {
             if (error.code === "auth/user-not-found") {
                 Alert.alert(
@@ -42,5 +55,5 @@ export const tryLogin = ({ email, password }) => {
             }
             loginUserFailed(error)
         })
-        .then(() => this.setState({ isLoading: false }));
+        .then(() => this.setState({ isLoading: false }));*/
 }

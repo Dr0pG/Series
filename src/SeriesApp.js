@@ -7,9 +7,9 @@ import { createStore, applyMiddleware  } from 'redux';
 import rootReducer from './reducers';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
-import logger from 'redux-logger'
+import reduxThunk from 'redux-thunk';
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger)));
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(reduxThunk)));
 
 const SeriesApp = (props) => (
     <Provider store={store}>
