@@ -12,9 +12,13 @@ import {
 import firebase from 'firebase';
 import 'firebase/auth';
 
+import { connect } from 'react-redux';
+
 import FormRow from '../components/FormRow';
 
-export default class LoginPage extends React.Component {
+import { tryLogin } from '../actions';
+
+class LoginPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -54,69 +58,10 @@ export default class LoginPage extends React.Component {
 
     tryLogin() {
         this.setState({ isLoading: true, message: "" });
-
         const { email, password } = this.state
 
-        const loginUserSucess = user => {
-            this.setState({
-                message: "Sucess"
-            });
-            this.props.navigation.navigate('Main', { user });
-        }
-
-        const loginUserFailed = error => {
-            this.setState({
-                message: this.getMessageByErrorCode(error.code)
-            });
-        }
-
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(loginUserSucess)
-            .catch(error => {
-                if (error.code === "auth/user-not-found") {
-                    Alert.alert(
-                        "User not found",
-                        "Do you want to create an account with those informations?",
-                        [
-                            {
-                                text: "Cancel",
-                                onPress: () => console.log("Don't want to create an account"),
-                                style: "cancel", //IOS
-                            },
-                            {
-                                text: "Yes",
-                                onPress: () => {
-                                    this.registeAccount(email, password);
-                                },
-                            }
-                        ],
-                        { cancelable: false }
-                    )
-                    return;
-                }
-                loginUserFailed(error)
-            })
-            .then(() => this.setState({ isLoading: false }));
-    }
-
-    registeAccount(email, password) {
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then(user => {
-                this.setState({
-                    message: "Sucess"
-                });
-                console.log("Sucess ", user);
-            })
-            .catch(error => {
-                this.setState({
-                    message: this.getMessageByErrorCode(error.code)
-                });
-                console.log("Error", error);
-            })
+        this.props.tryLogin({ email, password });
+        
     }
 
     getMessageByErrorCode(errorCode) {
@@ -216,3 +161,5 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     }
 });
+
+export default connect(null, { tryLogin })(LoginPage);
