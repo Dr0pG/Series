@@ -5,9 +5,9 @@ import {
     TextInput,
     StyleSheet,
     Button,
-    ActivityIndicator,
-    Alert
+    ActivityIndicator
 } from 'react-native';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 
 import firebase from 'firebase';
 import 'firebase/auth';
@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import FormRow from '../components/FormRow';
 
 import { tryLogin } from '../actions';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class LoginPage extends React.Component {
 
@@ -28,6 +29,8 @@ class LoginPage extends React.Component {
             password: "",
             isLoading: false,
             message: "",
+            secureTextEntry: true,
+            iconName: "eye",
         }
     }
 
@@ -61,11 +64,21 @@ class LoginPage extends React.Component {
         const { email, password } = this.state
 
         this.props.tryLogin({ email, password })
-            .then(() => {
-                this.setState({ message: "Sucesso!" });
-                this.props.navigation.replace("Main");
+            .then((user) => {
+                if (user)
+                    return this.props.navigation.replace("Main");
+
+                this.setState({
+                    isLoading: false,
+                    message: ""
+                });
             })
-        
+            .catch(error => {
+                this.setState({
+                    isLoading: false,
+                    message: this.getMessageByErrorCode(error.code)
+                });
+            });
     }
 
     getMessageByErrorCode(errorCode) {
@@ -117,9 +130,18 @@ class LoginPage extends React.Component {
             return null;
         return (
             <View>
-                <Text>{message}</Text>
+                <Text style={styles.errorMessage}>{message}</Text>
             </View>
         );
+    }
+
+    onIconPress = () => {
+        let iconName = (this.state.secureTextEntry) ? "eye-off" : "eye";
+
+        this.setState({
+            secureTextEntry: !this.state.secureTextEntry,
+            iconName: iconName
+        });
     }
 
     render() {
@@ -132,17 +154,24 @@ class LoginPage extends React.Component {
                         placeholder="user@mail.com"
                         value={this.state.email}
                         onChangeText={value => this.onChangeHandler("email", value)}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
                     />
                 </FormRow>
                 <FormRow last>
                     <Text style={styles.label}>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="******"
-                        secureTextEntry={true}
-                        value={this.state.password}
-                        onChangeText={value => this.onChangeHandler("password", value)}
-                    />
+                    <View style={styles.containerPassword}>
+                        <TextInput
+                            style={[styles.input, styles.password]}
+                            placeholder="******"
+                            secureTextEntry={this.state.secureTextEntry}
+                            value={this.state.password}
+                            onChangeText={value => this.onChangeHandler("password", value)}
+                        />
+                        <TouchableOpacity onPress={this.onIconPress}>
+                            <Icon name={this.state.iconName} size={20} />
+                        </TouchableOpacity>
+                    </View>
                 </FormRow>
                 {this.renderButton()}
                 {this.renderMessage()}
@@ -163,6 +192,18 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 5,
         paddingBottom: 5,
+    },
+    containerPassword: {
+        flexDirection: "row",
+    },
+    password: {
+        flex: 1,
+    },
+    errorMessage: {
+        textAlign: "center",
+        fontSize: 15,
+        color: "red",
+        padding: 10,
     }
 });
 

@@ -1,6 +1,8 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 
+import { Alert } from 'react-native';
+
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 const userLoginSuccess = (user) => ({
     type: USER_LOGIN_SUCCESS,
@@ -29,34 +31,35 @@ export const tryLogin = ({ email, password }) => (dispatch) => {
         .then(user => {
             const action = userLoginSuccess(user);
             dispatch(action);
+            return user;
         })
         .catch(error => {
             if (error.code === "auth/user-not-found") {
-                Alert.alert(
-                    "User not found",
-                    "Do you want to create an account with those informations?",
-                    [
-                        {
-                            text: "Cancel",
-                            onPress: () => console.log("Don't want to create an account"),
-                            style: "cancel", //IOS
-                        },
-                        {
-                            text: "Yes",
-                            onPress: () => {
-                                firebase
-                                    .auth()
-                                    .createUserWithEmailAndPassword(email, password)
-                                    .then(loginUserSucess)
-                                    .catch(loginUserFailed)
+                return new Promise((resolve, reject) => {
+                    Alert.alert(
+                        "User not found",
+                        "Do you want to create an account with those informations?",
+                        [
+                            {
+                                text: "Cancel",
+                                onPress: () => resolve(),
+                                style: "cancel", //IOS
+                            },
+                            {
+                                text: "Yes",
+                                onPress: () => {
+                                    firebase
+                                        .auth()
+                                        .createUserWithEmailAndPassword(email, password)
+                                        .then(resolve)
+                                        .catch(reject)
+                                }
                             }
-                        }
-                    ],
-                    { cancelable: false }
-                )
-                return;
+                        ],
+                        { cancelable: false }
+                    )
+                })
             }
-            loginUserFailed(error)
+            return new Promise.reject(error);
         })
-        .then(() => this.setState({ isLoading: false }));
 }
