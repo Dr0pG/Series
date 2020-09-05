@@ -1,32 +1,51 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { isValidElement } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+} from 'react-native';
 
-export default class SeriesPage extends React.Component {
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={[styles.title]}>Bem vindo</Text>
-                <View style={styles.body}>
-                    <Text>Hi</Text>
-                </View>
-            </View>
-        );
-    }
-}
+import SerieCard from '../components/SerieCard';
+
+import series from '../../series.json';
+
+import { isEven } from '../util/';
+
+const SeriesPage = (props) => (
+    <View>
+        <FlatList
+            data={series}
+            renderItem={({ item, index }) => (
+                    <View style={styles.container}>
+                        <SerieCard 
+                            serie={item} 
+                            isFirstColumn={isEven(index)}
+                        />
+                    </View>
+            )}
+            keyExtractor={item => item.id}
+            numColumns={2}
+            ListHeaderComponent={(props) => (
+                <View style={styles.paddingTop} />
+            )}
+            ListFooterComponent={(props) => (
+                <View style={styles.paddingBottom} />
+            )}
+        />
+    </View>
+);
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
+        flex: .5
     },
-    title: {
-        textAlign: "center",
-        fontSize: 25,
+    paddingTop: {
+        paddingTop: 5,
     },
-    titleNick: {
-        fontWeight: "bold",
-        paddingBottom: 10,
-    },
-    body: {
-        backgroundColor: "#ABDAFC",
+    paddingBottom: {
+        paddingBottom: 5,
     }
 })
+
+export default SeriesPage;
