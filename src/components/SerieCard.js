@@ -4,14 +4,18 @@ import {
     Text,
     StyleSheet,
     Dimensions,
-    Image
+    Image,
+    TouchableOpacity,
 } from 'react-native';
 
-const SerieCard = ({ serie, isFirstColumn }) => (
-    <View style={[
-        styles.container,
-        isFirstColumn ? styles.firstColumn : styles.lastColumn
-    ]}>
+const SerieCard = ({ serie, isFirstColumn, onNavigate }) => (
+    <TouchableOpacity 
+        onPress={onNavigate}
+        style={[
+            styles.container,
+            isFirstColumn ? styles.firstColumn : styles.lastColumn
+        ]}
+    >
         <View style={styles.card}>
             <Image
                 source={{
@@ -24,20 +28,19 @@ const SerieCard = ({ serie, isFirstColumn }) => (
                 <Text style={styles.cardTitle} numberOfLines={1}>{serie.title}</Text>
             </View>
         </View>
-    </View>
+    </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
-        //width: 50%
+        //width: "50%",
         padding: 5,
         height: Dimensions.get('window').width / 2,
     },
     card: {
         flex: 1,
-        borderWidth: 1,
+        //borderWidth: 1,
     },
     cardTitleWrapper: {
         backgroundColor: "black",

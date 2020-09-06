@@ -1,4 +1,4 @@
-import React, { isValidElement } from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import SerieCard from '../components/SerieCard';
+import AddSerieCard from '../components/AddSerieCard';
 
 import series from '../../series.json';
 
@@ -15,12 +16,22 @@ import { isEven } from '../util/';
 const SeriesPage = (props) => (
     <View>
         <FlatList
-            data={series}
+            data={[...series, { isLast: true }]}
             renderItem={({ item, index }) => (
-                    <View style={styles.container}>
-                        <SerieCard 
-                            serie={item} 
+                item.isLast
+                    ? <View style={styles.container}>
+                        <AddSerieCard 
                             isFirstColumn={isEven(index)}
+                            onNavigate={() => props.navigation.navigate("SerieForm")}
+                        />
+                        </View>
+                    : <View style={styles.container}>
+                        <SerieCard
+                            serie={item}
+                            isFirstColumn={isEven(index)}
+                            onNavigate={() => (
+                                props.navigation.navigate("SerieDetail", { serie: item }
+                                ))}
                         />
                     </View>
             )}
