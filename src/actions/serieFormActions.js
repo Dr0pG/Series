@@ -7,3 +7,7 @@ export const setField = (field, value) => {
     }
 }
 
+export const saveSerie = (serie) => {
+    console.log("BOM DIA", serie);
+}
+
