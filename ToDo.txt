@@ -1,4 +1,0 @@
-- Colocar Redux
-- Redux e assincronismo
-- Listagem das series
-- Create series no firebase
