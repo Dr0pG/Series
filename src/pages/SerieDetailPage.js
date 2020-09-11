@@ -1,19 +1,21 @@
 import React from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     Image,
     ScrollView,
     Button,
 } from 'react-native';
 
+import { connect } from 'react-redux';
+import { deleteSerie } from '../actions';
+
 import Line from '../components/Line';
 import LongText from '../components/LongText';
 
 class SerieDetailPage extends React.Component {
     render() {
-        const { navigation } = this.props;
+        const { navigation, deleteSerie } = this.props;
         const { serie } = navigation.state.params;
 
         return (
@@ -35,11 +37,15 @@ class SerieDetailPage extends React.Component {
                     <LongText label="Description" content={serie.description} />
                 </View>
                 <View style={styles.buttonContainer}>
-                    <Button title="Edit" style={styles.editButton} onPress={() => {
+                    <Button title="Edit" color="green" onPress={() => {
                         navigation.replace("SerieForm", { serieToEdit: serie });
                     }} />
-                    <Button title="Delete" style={styles.deleteButton} onPress={() => {
-
+                </View>
+                <View style={[styles.buttonContainer, styles.buttonLast]}>
+                    <Button title="Delete" color="red" onPress={async () => {
+                        const hasDeleted = await deleteSerie(serie);
+                        if(hasDeleted)
+                            return navigation.goBack();
                     }} />
                 </View>
             </ScrollView>
@@ -74,8 +80,11 @@ const styles = StyleSheet.create({
     buttonContainer: {
         paddingTop: 5,
         paddingBottom: 5
+    },
+    buttonLast: {
+        paddingBottom: 20,
     }
 });
 
-export default SerieDetailPage;
+export default connect(null, { deleteSerie })(SerieDetailPage);
 
