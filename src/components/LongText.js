@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     collapsed: {
-        maxHeight: 75,
+        maxHeight: 85,
     },
     expanded: {
         flex: 1,
