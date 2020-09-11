@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Image,
     ScrollView,
+    Button,
 } from 'react-native';
 
 import Line from '../components/Line';
@@ -12,21 +13,34 @@ import LongText from '../components/LongText';
 
 class SerieDetailPage extends React.Component {
     render() {
-        const { serie } = this.props.navigation.state.params;
+        const { navigation } = this.props;
+        const { serie } = navigation.state.params;
 
         return (
             <ScrollView style={styles.container}>
-                <View style={styles.containerImage}>
-                    <Image source={{
-                        uri: serie.img
-                    }}
-                        style={styles.image}
-                    />
+                <View style={serie.img ? styles.containerImage : null}>
+                    {
+                        serie.img
+                            ? <Image source={{
+                                uri: serie.img
+                            }}
+                                style={styles.image}
+                            />
+                            : null
+                    }
                 </View>
                 <View style={styles.containerInfo}>
                     <Line label="Gender" content={serie.gender} />
                     <Line label="Rate" content={serie.rate} />
                     <LongText label="Description" content={serie.description} />
+                </View>
+                <View style={styles.buttonContainer}>
+                    <Button title="Edit" style={styles.editButton} onPress={() => {
+                        navigation.replace("SerieForm", { serieToEdit: serie });
+                    }} />
+                    <Button title="Delete" style={styles.deleteButton} onPress={() => {
+
+                    }} />
                 </View>
             </ScrollView>
         );
@@ -56,6 +70,10 @@ const styles = StyleSheet.create({
         borderColor: "black",
         flexDirection: "column",
         alignItems: "center",*/
+    },
+    buttonContainer: {
+        paddingTop: 5,
+        paddingBottom: 5
     }
 });
 

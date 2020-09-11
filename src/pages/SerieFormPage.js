@@ -9,6 +9,7 @@ import {
     ScrollView,
     Button,
     ActivityIndicator,
+    Alert,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -25,6 +26,29 @@ class SerieFormPage extends React.Component {
         this.state = {
             isLoading: false,
         }
+    }
+
+    renderButton() {
+        if (this.state.isLoading) {
+            return <ActivityIndicator />
+        }
+        return (<Button
+            title="Save"
+            onPress={async () => {
+                this.setState({ isLoading: true });
+                
+                try {
+                    const { saveSerie, serieForm, navigation } = this.props;
+                    await saveSerie(serieForm); //async
+                    navigation.goBack();
+                } catch (error) {
+                    Alert.alert("Error", error.message);
+                } finally {
+                    this.setState({ isLoading: false });
+                }
+            }}
+        />
+        )
     }
 
     render() {
@@ -90,17 +114,7 @@ class SerieFormPage extends React.Component {
                     />
                 </FormRow>
                 <View style={styles.buttonContainer}>
-                    {this.state.isLoading
-                        ? <ActivityIndicator />
-                        : <Button
-                            title="Save"
-                            onPress={async () => {
-                                this.setState({ isLoading: true });
-                                await saveSerie(serieForm); //async
-                                this.setState({ isLoading: false });
-                                navigation.goBack();
-                            }} />
-                    }
+                    {this.renderButton()}
                 </View>
             </ScrollView>
         );

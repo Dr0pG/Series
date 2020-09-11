@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 const SerieCard = ({ serie, isFirstColumn, onNavigate }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
         onPress={onNavigate}
         style={[
             styles.container,
@@ -17,13 +17,17 @@ const SerieCard = ({ serie, isFirstColumn, onNavigate }) => (
         ]}
     >
         <View style={styles.card}>
-            <Image
-                source={{
-                    uri: serie.img
-                }}
-                aspectRatio={1}
-                resizeMode="cover"
-            />
+            {
+                serie.img
+                    ? <Image
+                        source={{
+                            uri: serie.img
+                        }}
+                        aspectRatio={1}
+                        resizeMode="cover"
+                    />
+                    : null
+            }
             <View style={styles.cardTitleWrapper}>
                 <Text style={styles.cardTitle} numberOfLines={1}>{serie.title}</Text>
             </View>
