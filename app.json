@@ -6,9 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/launcher_icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#6ca2f7"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,7 +17,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dropg.series"
+    },
+    "android": {
+      "package": "com.dropg.series"
     },
     "web": {
       "favicon": "./assets/favicon.png"
