@@ -18,8 +18,15 @@ const AppNavigator = createStackNavigator({
   },
   'SerieForm': {
     screen: SerieFormPage,
-    navigationOptions: {
-      title: "New Serie",
+    navigationOptions: ({ navigation }) => {
+      if (navigation.state.params && navigation.state.params.serieToEdit) {
+        return {
+          title: navigation.state.params.serieToEdit.title,
+        }
+      }
+      return {
+        title: "New Serie",
+      }
     }
   },
   'SerieDetail': {

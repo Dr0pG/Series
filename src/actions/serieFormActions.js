@@ -30,14 +30,16 @@ export const resetForm = () => ({
 export const saveSerie = (serie) => {
     const { currentUser } = firebase.auth();
     return async (dispatch) => {
+        const db = firebase.database();
         if (serie.id) {
-            //update
+            await db
+                .ref(`/users/${currentUser.uid}/series/${serie.id}`)
+                .set(serie);
         } else {
-            await firebase
-                .database()
+            await db
                 .ref(`/users/${currentUser.uid}/series`)
                 .push(serie);
-            dispatch(serieSavedSuccess())
         }
+        dispatch(serieSavedSuccess())
     }
 }
