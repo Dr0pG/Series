@@ -4,13 +4,13 @@ import {
     Text,
     StyleSheet,
     TextInput,
-    Picker,
-    Slider,
     ScrollView,
     Button,
     ActivityIndicator,
     Alert,
     Image,
+    Slider,
+    Picker,
 } from 'react-native';
 
 import * as Permissions from 'expo-permissions';
@@ -76,7 +76,7 @@ class SerieFormPage extends React.Component {
             }
 
             const result = await ImagePicker.launchImageLibraryAsync({
-                quality: .2,
+                quality: .5,
                 base64: true,
                 allowsEditing: true,
                 aspect: [1, 1]
@@ -94,7 +94,7 @@ class SerieFormPage extends React.Component {
             }
 
             const result = await ImagePicker.launchCameraAsync({
-                quality: .2,
+                quality: .5,
                 base64: true,
                 allowsEditing: true,
                 aspect: [1, 1]

@@ -17,16 +17,22 @@ import { isEven } from '../util/';
 
 class SeriesPage extends React.Component {
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.watchSeries();
     }
 
     render() {
         const { series, navigation } = this.props;
-        if(series === null){
-            return <ActivityIndicator />;
+        if (series === null) {
+            return (
+                <View style={styles.containerAdd}>
+                    <AddSerieCard
+                        isFirstColumn={true}
+                        onNavigate={() => navigation.navigate("SerieForm")}
+                    />
+                </View>
+            );
         }
-
         return (
             <View>
                 <FlatList
@@ -72,20 +78,24 @@ const styles = StyleSheet.create({
     },
     paddingBottom: {
         paddingBottom: 5,
+    },
+    containerAdd: {
+        width: "30%",
+        height: "30%",
+        aspectRatio: 1,
     }
 })
 
 const mapStateToProps = (state) => {
     const { series } = state;
 
-    if(series === null){
+    if (series === null) {
         return { series }
     }
 
-
     const keys = Object.keys(series);
     const seriesWithKeys = keys.map((id) => {
-        return {...series[id], id }
+        return { ...series[id], id }
     })
     return { series: seriesWithKeys };
 }

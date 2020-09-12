@@ -26,7 +26,6 @@ export const watchSeries = () => {
 }
 
 export const deleteSerie = (serie) => {
-    const { currentUser } = firebase.auth();
     return dispatch => {
         return new Promise((resolve, reject) => {
             Alert.alert("Delete Serie", `Do you want to delete ${serie.title}`,
