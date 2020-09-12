@@ -4,7 +4,7 @@
     "slug": "series",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon(2).png",
     "splash": {
       "image": "./assets/launcher_icon.png",
       "resizeMode": "contain",
@@ -21,6 +21,11 @@
       "bundleIdentifier": "com.dropg.series"
     },
     "android": {
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "package": "com.dropg.series"
     },
     "web": {

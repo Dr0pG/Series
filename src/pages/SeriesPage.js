@@ -24,7 +24,7 @@ class SeriesPage extends React.Component {
     render() {
         const { series, navigation } = this.props;
         if(series === null){
-            return <ActivityIndicator />
+            return <ActivityIndicator />;
         }
 
         return (

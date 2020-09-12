@@ -20,11 +20,11 @@ class SerieDetailPage extends React.Component {
 
         return (
             <ScrollView style={styles.container}>
-                <View style={serie.img ? styles.containerImage : null}>
+                <View style={serie.img64 ? styles.containerImage : null}>
                     {
-                        serie.img
+                        serie.img64
                             ? <Image source={{
-                                uri: serie.img
+                                uri: `data:image/jpeg;base64,${serie.img64}`
                             }}
                                 style={styles.image}
                             />

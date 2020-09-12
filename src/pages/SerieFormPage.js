@@ -10,7 +10,11 @@ import {
     Button,
     ActivityIndicator,
     Alert,
+    Image,
 } from 'react-native';
+
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 
 import { connect } from 'react-redux';
 
@@ -28,13 +32,13 @@ class SerieFormPage extends React.Component {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         const { navigation, setWholeSerie, resetForm } = this.props;
         const { params } = navigation.state;
 
-        if(params && params.serieToEdit){
+        if (params && params.serieToEdit) {
             setWholeSerie(params.serieToEdit);
-        }else{
+        } else {
             resetForm();
         }
     }
@@ -47,7 +51,7 @@ class SerieFormPage extends React.Component {
             title="Save"
             onPress={async () => {
                 this.setState({ isLoading: true });
-                
+
                 try {
                     const { saveSerie, serieForm, navigation } = this.props;
                     await saveSerie(serieForm); //async
@@ -61,6 +65,54 @@ class SerieFormPage extends React.Component {
         />
         )
     }
+
+    async pickImage(name) {
+        if (name === "library") {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+            if (status !== "granted") {
+                Alert.alert("You need to give us access to use your camera!");
+                return;
+            }
+
+            const result = await ImagePicker.launchImageLibraryAsync({
+                quality: .2,
+                base64: true,
+                allowsEditing: true,
+                aspect: [1, 1]
+            });
+
+            if (!result.cancelled) {
+                this.props.setField('img64', result.base64);
+            }
+        } else {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA);
+
+            if (status !== "granted") {
+                Alert.alert("You need to give us access to use your camera!");
+                return;
+            }
+
+            const result = await ImagePicker.launchCameraAsync({
+                quality: .2,
+                base64: true,
+                allowsEditing: true,
+                aspect: [1, 1]
+            });
+
+            if (!result.cancelled) {
+                this.props.setField('img64', result.base64);
+            }
+        }
+    }
+
+    /*<TextInput
+                        style={styles.input}
+                        placeholder="Image url"
+                        value={serieForm.img}
+                        onChangeText={value => setField('img', value)}
+                        keyboardType="url"
+                    />*/
 
     render() {
         const { serieForm, setField, saveSerie, navigation } = this.props;
@@ -79,13 +131,23 @@ class SerieFormPage extends React.Component {
                 </FormRow>
                 <FormRow>
                     <Text style={styles.label}>Image</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Image url"
-                        value={serieForm.img}
-                        onChangeText={value => setField('img', value)}
-                        keyboardType="url"
-                    />
+                    {serieForm.img64
+                        ? <Image
+                            source={{
+                                uri: `data:image/jpeg;base64,${serieForm.img64}`
+                            }}
+                            style={styles.img}
+                        />
+                        : null
+                    }
+                    <View style={styles.buttonsContainer}>
+                        <View style={styles.libraryButton}>
+                            <Button title="Library" onPress={() => this.pickImage("library")} />
+                        </View>
+                        <View style={styles.cameraButton}>
+                            <Button title="Camera" onPress={() => this.pickImage("camera")} />
+                        </View>
+                    </View>
                 </FormRow>
                 <FormRow>
                     <Text style={styles.label}>Gender</Text>
@@ -159,6 +221,23 @@ const styles = StyleSheet.create({
     buttonContainer: {
         paddingTop: 10,
         paddingBottom: 20,
+    },
+    img: {
+        aspectRatio: 1,
+        width: "100%",
+    },
+    buttonsContainer: {
+        paddingTop: 10,
+        flex: 1,
+        flexDirection: "row",
+    },
+    libraryButton: {
+        flex: 2,
+        paddingRight: 10,
+    },
+    cameraButton: {
+        flex: 2,
+        paddingLeft: 10,
     }
 })
 
